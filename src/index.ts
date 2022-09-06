@@ -3,8 +3,8 @@ import mojangson from "mojangson";
 
 import { Bot } from "mineflayer";
 
-const DEATH_ENTITY_TYPE_MOB = 'mob'
-const DEATH_ENTITY_TYPE_PLAYER = 'player'
+export const DEATH_ENTITY_TYPE_MOB = 'mob'
+export const DEATH_ENTITY_TYPE_PLAYER = 'player'
 
 // Typescript safe
 function hasOwnProperty<X extends {}, Y extends PropertyKey>
@@ -16,7 +16,7 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>
  * Emit player death event.
  * @param {Object} bot Mineflayer bot instance.
  */
-function deathEvent(bot: Bot) {
+export default function deathEvent(bot: Bot) {
 
     bot.once("spawn", () => {
         bot.on("message", (jsonMsg, position) => {
@@ -90,8 +90,3 @@ function getPlayerByUUID(bot: Bot, playerUUID: string) {
     if (playerUUID.includes(":")) return playerUUID // coz when uuid contains ":" it is a entity.
     return Object.values(bot.players).find((player) => player.uuid === playerUUID);
 }
-
-module.exports = deathEvent;
-
-module.exports.DEATH_ENTITY_TYPE_MOB = DEATH_ENTITY_TYPE_MOB;
-module.exports.DEATH_ENTITY_TYPE_PLAYER = DEATH_ENTITY_TYPE_PLAYER;
