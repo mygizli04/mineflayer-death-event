@@ -1,21 +1,36 @@
-const get = require("lodash.get");
-const mojangson = require("mojangson");
+import get from "lodash.get";
+import mojangson from "mojangson";
+
+import { Bot } from "mineflayer";
 
 const DEATH_ENTITY_TYPE_MOB = 'mob'
 const DEATH_ENTITY_TYPE_PLAYER = 'player'
+
+// Typescript safe
+function hasOwnProperty<X extends {}, Y extends PropertyKey>
+  (obj: X, prop: Y): obj is X & Record<Y, unknown> {
+  return obj.hasOwnProperty(prop)
+}
 
 /**
  * Emit player death event.
  * @param {Object} bot Mineflayer bot instance.
  */
-function deathEvent(bot) {
+function deathEvent(bot: Bot) {
 
     bot.once("spawn", () => {
         bot.on("message", (jsonMsg, position) => {
             if (position !== "system") return;
 
             try {
-                if (!jsonMsg.hasOwnProperty("translate") && !jsonMsg.hasOwnProperty("with")) return;
+                if (!hasOwnProperty(jsonMsg, "translate")) return;
+                if (!hasOwnProperty(jsonMsg, "with")) return;
+
+                // Gotta make typescript happy!
+                if (typeof jsonMsg.translate !== "string") return;
+                if (!Array.isArray(jsonMsg.with)) return;
+
+                if (!jsonMsg.translate) return;
                 if (!jsonMsg.translate.startsWith("death.")) return;
                 const deathType = jsonMsg.translate;
                 const victimPlayer = jsonMsg.with[0];
@@ -67,11 +82,11 @@ function deathEvent(bot) {
     });
 }
 
-function defineProperty(target, key, value) {
+function defineProperty(target: any, key: PropertyKey, value: any) {
     Object.defineProperty(target, key, { value, writable: false, enumerable: false, configurable: false });
 }
 
-function getPlayerByUUID(bot, playerUUID) {
+function getPlayerByUUID(bot: Bot, playerUUID: string) {
     if (playerUUID.includes(":")) return playerUUID // coz when uuid contains ":" it is a entity.
     return Object.values(bot.players).find((player) => player.uuid === playerUUID);
 }

@@ -2,24 +2,18 @@
 
 Emit player death event in Mineflayer.
 
-[![GitHub stars](https://img.shields.io/github/stars/tuanzisama/mineflayer-death-event)](https://github.com/tuanzisama/mineflayer-death-event/stargazers)
-[![GitHub license](https://img.shields.io/github/license/tuanzisama/mineflayer-death-event)](https://github.com/tuanzisama/mineflayer-death-event/blob/master/LICENSE)
+Forked for [my fork of zillybot-mc](https://github.com/mygizli04/zillybot-mc).
+
+[![GitHub stars](https://img.shields.io/github/stars/mygizli04/mineflayer-death-event)](https://github.com/mygizli04/mineflayer-death-event/stargazers)
+[![GitHub license](https://img.shields.io/github/license/mygizli04/mineflayer-death-event)](https://github.com/mygizli04/mineflayer-death-event/blob/master/LICENSE)
 [![Rate on Openbase](https://badges.openbase.io/js/rating/mineflayer-death-event.svg)](https://openbase.io/js/mineflayer-death-event?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
-[![NPM](https://nodei.co/npm/mineflayer-death-event.png)](https://nodei.co/npm/mineflayer-death-event/)
-
-[简体中文 文档](./README.ZH_CN.MD)
-
-## Install
+## Build
 
 ```
-npm install mineflayer-death-event --save
-```
-
-or
-
-```
-yarn add mineflayer-death-event
+git clone https://github.com/mygizli04/zillybot-mc.git
+cd zillybot-mc
+tsc -p .
 ```
 
 ## Example

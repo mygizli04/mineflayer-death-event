@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/tuanzisama/mineflayer-death-event/issues"
   },
-  "homepage": "https://github.com/tuanzisama/mineflayer-death-event#readme"
+  "homepage": "https://github.com/tuanzisama/mineflayer-death-event#readme",
+  "devDependencies": {
+    "@types/lodash.get": "^4.4.7",
+    "mineflayer": "^4.4.0"
+  }
 }
