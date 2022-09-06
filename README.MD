@@ -82,6 +82,6 @@ offender death method.
 | ------ | ------ | ------ |
 | assetId | String | Weapon's Minecraft asset ID |
 | tag | String | Weapon's tag |
-| mame | String | Weapon's mame, This is usually named after the anvil |
+| name | String | Weapon's mame, This is usually named after the anvil |
 | raw | Function | Original value, from [message](https://mineflayer.prismarine.js.org/#/api?id=quotmessagequot-jsonmsg-position) event |
 | tagToJSON | Function | Parse and simplify weapon tag |

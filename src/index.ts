@@ -1,22 +1,24 @@
 import get from "lodash.get";
 import mojangson from "mojangson";
 
-import { Bot } from "mineflayer";
+import { Bot, Player } from "mineflayer";
+import { ChatMessage } from "prismarine-chat";
+import { EmitData } from "../mineflayer";
 
-export const DEATH_ENTITY_TYPE_MOB = 'mob'
-export const DEATH_ENTITY_TYPE_PLAYER = 'player'
+export const DEATH_ENTITY_TYPE_MOB = 'mob';
+export const DEATH_ENTITY_TYPE_PLAYER = 'player';
 
 // Typescript safe
 function hasOwnProperty<X extends {}, Y extends PropertyKey>
-  (obj: X, prop: Y): obj is X & Record<Y, unknown> {
-  return obj.hasOwnProperty(prop)
+    (obj: X, prop: Y): obj is X & Record<Y, unknown> {
+    return obj.hasOwnProperty(prop);
 }
 
 /**
  * Emit player death event.
  * @param {Object} bot Mineflayer bot instance.
  */
-export default function deathEvent(bot: Bot) {
+export default function deathEvent (bot: Bot) {
 
     bot.once("spawn", () => {
         bot.on("message", (jsonMsg, position) => {
@@ -43,12 +45,12 @@ export default function deathEvent(bot: Bot) {
                     weapon = {
                         tag: weaponContents.tag,
                         assetId: weaponContents.id,
-                        mame: get(weaponTag, "value.display.value.Name.value.text.value", null),
+                        name: get(weaponTag, "value.display.value.Name.value.text.value", null),
                     };
-                    defineProperty(weapon, "raw", weaponData.json)
+                    defineProperty(weapon, "raw", weaponData.json);
                     defineProperty(weapon, "tagToJSON", function () {
                         return mojangson.simplify(weaponTag);
-                    })
+                    });
                 }
 
                 let offender = null;
@@ -59,22 +61,22 @@ export default function deathEvent(bot: Bot) {
                         id: isMob ? get(offenderPlayerOrMob, "hoverEvent.contents.type") : get(offenderPlayerOrMob, "hoverEvent.contents.id"),
                         type: isMob ? DEATH_ENTITY_TYPE_MOB : DEATH_ENTITY_TYPE_PLAYER,
                     };
-                    defineProperty(offender, "raw", offenderPlayerOrMob)
-                    defineProperty(offender, "detail", getPlayerByUUID.bind(null, bot, offender.id))
+                    defineProperty(offender, "raw", offenderPlayerOrMob);
+                    defineProperty(offender, "detail", getPlayerByUUID.bind(null, bot, offender.id));
                 }
 
                 const emitData = {
-                    victim: { id: get(victimPlayer, "hoverEvent.contents.id") },
-                    offender,
-                    weapon,
+                    victim: {
+                        id: get(victimPlayer, "hoverEvent.contents.id"),
+                    },
                     method: deathType,
                 };
 
-                defineProperty(emitData.victim, "raw", victimPlayer.json)
-                defineProperty(emitData.victim, "detail", getPlayerByUUID.bind(null, bot, emitData.victim.id))
-                defineProperty(emitData, "raw", jsonMsg.json)
+                defineProperty(emitData.victim, "raw", victimPlayer.json);
+                defineProperty(emitData.victim, "detail", getPlayerByUUID.bind(null, bot, emitData.victim.id));
+                defineProperty(emitData, "raw", jsonMsg.json);
 
-                bot.emit("playerDeath", emitData);
+                bot.emit("playerDeath", emitData as EmitData);
             } catch (error) {
                 console.error(error);
             }
@@ -82,11 +84,11 @@ export default function deathEvent(bot: Bot) {
     });
 }
 
-function defineProperty(target: any, key: PropertyKey, value: any) {
+function defineProperty (target: any, key: PropertyKey, value: any) {
     Object.defineProperty(target, key, { value, writable: false, enumerable: false, configurable: false });
 }
 
-function getPlayerByUUID(bot: Bot, playerUUID: string) {
-    if (playerUUID.includes(":")) return playerUUID // coz when uuid contains ":" it is a entity.
+function getPlayerByUUID (bot: Bot, playerUUID: string) {
+    if (playerUUID.includes(":")) return playerUUID; // coz when uuid contains ":" it is a entity.
     return Object.values(bot.players).find((player) => player.uuid === playerUUID);
 }
